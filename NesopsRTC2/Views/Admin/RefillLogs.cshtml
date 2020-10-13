@@ -1,0 +1,124 @@
+﻿
+@{
+    ViewData["Title"] = "RefillLogs";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">-- Refill History --</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Account</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        const CardData = $.ajax({
+            "url": `/api/Card`,
+            "method": "GET",
+            "datatype": 'application/json',
+            "async": false,
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+            }
+        }).responseJSON.data;
+        function CreateDataTable() {
+            $('#dataTable').DataTable().destroy();
+            $('#dataTable').DataTable({
+                info: false,
+                paging: true,
+                ordering: true,
+                lengthChange: false,
+                data: $.ajax({
+                    "url": `/api/logrefill`,
+                    "method": "GET",
+                    "datatype": 'application/json',
+                    "async": false,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                }).responseJSON.data,
+                columns: [
+                    {
+                        data: 'id'
+                    },
+                    {
+                        data: 'cardId',
+                        render: function (data) {
+                            for (var i = 0; i < CardData.length; i++) {
+                                if (data == CardData[i].id) {
+                                    return CardData[i].username;
+                                }
+                            }
+                        }
+                    },
+                    {
+                        data: 'date',
+                        render: function (data) {
+                            var date = moment(data).format('DD/MM/YYYY  HH:mm:ss');
+                            return date;
+                        }
+                    },
+                    {
+                        data: 'credit',
+                        render: function (data, type, full) {
+                            return data + "$";
+                        }
+                    },
+                    {
+                        data: 'refillType',
+                        render: function (data, type, full) {
+                            if (data == 1) {
+                                return "Correction";
+                            }
+                            if (data == 2) {
+                                return "Extra Fee";
+                            }
+                            if (data == 3) {
+                                return "Agent Refund";
+                            }
+                            return "Amount";
+                        }
+                    },
+                    {
+                        data: 'description'
+                    },
+                    {
+                        data: 'id'
+                    },
+                ]
+            });
+        }
+        $(document).ready(function (e) {
+            CreateDataTable();
+        });
+    </script>
+}
+

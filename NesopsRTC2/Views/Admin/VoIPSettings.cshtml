@@ -1,0 +1,179 @@
+﻿
+@{
+    ViewData["Title"] = "VoIP Settings";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">--SIP CONFIG LIST--</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(17px, 19px, 0px);">
+                    <div class="dropdown-header">Actions:</div>
+                    <a class="dropdown-item" href="#" onclick="GenerateMD5SecretAllAcount()">Generate MD5Secret</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Card Id</th>
+                        <th>Username</th>
+                        <th>AccountCode</th>
+                        <th>Secret</th>
+                        <th>MD5Secret</th>
+                        <th>CallerId</th>
+                        <th>Context</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        function CreateDataTable() {
+            $('#dataTable').DataTable().destroy();
+            $('#dataTable').DataTable({
+                info: false,
+                paging: true,
+                ordering: true,
+                lengthChange: false,
+                data: $.ajax({
+                    "url": `/api/SipBuddies`,
+                    "method": "GET",
+                    "datatype": 'application/json',
+                    "async": false,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                }).responseJSON.data,
+                columns: [
+                    {
+                        data: 'id'
+                    },
+                    {
+                        data: 'idCcCard'
+                    },
+                    {
+                        data: {
+                            id: 'id',
+                            username: 'username'
+                        },
+                        render: function (data) {
+                            return '<a href="/Admin/CardDetail?id=' + data.id + '">' + data.username + '</a>';
+                        }
+                    },
+                    {
+                        data: 'accountcode'
+                    },
+                    {
+                        data: 'secret'
+                    },
+                    {
+                        data: 'md5secret'
+                    },
+                    {
+                        data: 'callerid'
+                    },
+                    {
+                        data: 'context'
+                    },
+                    {
+                        data: 'id',
+                        render: function (data) {
+                            return '<button class="btn btn-success btn-circle btn-sm" onclick="GenerateMD5SecretForAcount(' + data + ')"><i class="fas fa-check"></i></button>';
+                        },
+                        width: "5%"
+                    }
+                ]
+            });
+        };
+        function GenerateMD5SecretAllAcount() {
+            swal({
+                title: "Generate Password",
+                text: "Do you want to generate all secret?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+            }).then(function (isConfirm) {
+                if (isConfirm.value == true) {
+                    $.ajax({
+                        url: `/api/CustomAPI/md5secret/generate`,
+                        method: "POST",
+                        datatype: 'application/json',
+                        async: false,
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                        },
+                        success: function () {
+                            swal("Success", "Generate successful!", "success");
+                            CreateDataTable();
+                        },
+                        error: function () {
+                            swal("Error", "Generate failed!", "error");
+                        }
+                    });
+                };
+            });
+        }
+        function GenerateMD5SecretForAcount(id) {
+            swal({
+                title: "Generate Password",
+                text: "Do you want to generate md5secret for this account?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+            }).then(function (isConfirm) {
+                if (isConfirm.value == true) {
+                    $.ajax({
+                        url: `/api/CustomAPI/md5secret/generate/${id}`,
+                        method: "POST",
+                        datatype: 'application/json',
+                        async: false,
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                        },
+                        success: function () {
+                            swal("Success", "Generate successful!", "success");
+                            CreateDataTable();
+                        },
+                        error: function () {
+                            swal("Error", "This account has been generated md5secret!", "error");
+                        }
+                    });
+                };
+            });
+        }
+        $(document).ready(function (e) {
+            CreateDataTable();
+        });
+    </script>
+}
+
+

@@ -1,0 +1,288 @@
+﻿
+@{
+    ViewData["Title"] = "TicketDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Ticket: <span id="ticketTitle"></span></h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="font-weight-bold">By: <span class="font-weight-light" id="ticketCreator"></span></h5>
+                        <h5 class="font-weight-bold">Priority: <span class="font-weight-light" id="ticketPriority"></span></h5>
+                        <h5 class="font-weight-bold">Component: <span class="font-weight-light" id="ticketComponent"></span></h5>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="font-weight-bold">Date: <span class="font-weight-light" id="ticketDate"></span></h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">Description: </h5>
+                        <span id="ticketDescription"></span>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="font-weight-bold">
+                            Status:
+                            <select id="ticketStatus" class="custom-select">
+                                <option value="0">New</option>
+                                <option value="1">Fixed</option>
+                                <option value="2">Reopen</option>
+                                <option value="4">Invalid</option>
+                            </select>
+                        </h5>
+                    </div>
+                    <div class="col-md-12">
+                        <h5>Comment:</h5>
+                        <div class="col-md-10">
+                            <textarea class="form-control form-control-user" id="ticketComment"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <button class="btn btn-secondary btn-icon-split float-right" id="updateCommentBtn">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-arrow-right"></i>
+                            </span>
+                            <span class="text">Update</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" id="ticketComments"></div>
+@section scripts{
+    <script type="text/javascript">
+        const CardData = $.ajax({
+            "url": `/api/Card/${localStorage.getItem("CARDID")}`,
+            "method": "GET",
+            "datatype": 'application/json',
+            "async": false,
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+            }
+        }).responseJSON.data;
+        const SupportComponentData = $.ajax({
+            "url": `/api/SupportComponent`,
+            "method": "GET",
+            "datatype": 'application/json',
+            "async": false,
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+            }
+        }).responseJSON.data;
+        function TicketComments(ticketId, ticketCreator) {
+            const TicketCommentData = $.ajax({
+                "url": `/api/TicketComment?ticketId=${ticketId}`,
+                "method": "GET",
+                "datatype": 'application/json',
+                "async": false,
+                "headers": {
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                }
+            }).responseJSON.data;
+
+            if (TicketCommentData.length > 0) {
+                for (let i = 0; i < TicketCommentData.length; i++) {
+                    let creator = "";
+                    if (TicketCommentData[i].creatorType == 1) {
+                        creator = "(Administrator)";
+                    } else {
+                        creator = ticketCreator;
+                    }
+                    let date = moment(TicketCommentData[i].date).format('DD/MM/YYYY  HH:mm:ss');
+                    let message = TicketCommentData[i].description;
+                    const statusNew = TicketCommentData[i].viewedCust == 1 ? true : false;
+                    $('#ticketComments').append(CreateCommentCard(creator, date, message, statusNew));
+                    if (TicketCommentData[i].viewedCust == 1) {
+                        UpdateCommentStatus(TicketCommentData[i]);
+                    }
+                }
+
+            }
+        }
+        function CreateCommentCard(creator, date, message, statusNew) {
+            let ticketCommentDiv = $('<div />', {
+                "class": 'col-lg-12'
+            }).append(
+                $('<div />', {
+                    "class": 'card shadow mb-3'
+                }).append([
+                    $('<div />', {
+                        "class": 'card-header py-3'
+                    }).append(
+                        $('<h6 />', {
+                            "class": 'm-0 font-weight-bold text-primary',
+                            text: 'By: ' + creator + "  Date: " + date
+                        })
+                    )
+                    , $('<div />', {
+                        "class": 'card-body'
+                    }).append([
+                        $('<h6 />', {
+                            text: message
+                        })
+                    ])
+                ])
+            );
+            let ticketCommentDivNew = $('<div />', {
+                "class": 'col-lg-12'
+            }).append(
+                $('<div />', {
+                    "class": 'card shadow mb-3'
+                }).append([
+                    $('<div />', {
+                        "class": 'card-header py-3'
+                    }).append(
+                        $('<h6 />', {
+                            "class": 'm-0 font-weight-bold text-primary',
+                            text: 'By: ' + creator + "  Date: " + date
+                        })
+                    )
+                    , $('<div />', {
+                        "class": 'card-body'
+                    }).append([
+                        $('<h6 />', {
+                            text: message
+                        }),
+                        $('<span />', {
+                            "class": 'badge badge-danger',
+                            text: 'New'
+                        })
+                    ])
+                ])
+            );
+            return statusNew == true ? ticketCommentDivNew : ticketCommentDiv;
+        }
+        function UpdateCommentStatus(ticketComment) {
+            ticketComment.viewedCust = 0;
+            $.ajax({
+                url: `/api/TicketComment/${ticketComment.id}`,
+                method: "PUT",
+                data: JSON.stringify(ticketComment),
+                datatype: 'application/json',
+                async: false,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                }
+            })
+        };
+        let ticketDetail = null;
+        function GetTicketDetail() {
+            const params = new URLSearchParams(location.search);
+            const ticketId = params.get("ticketId");
+            if (ticketId == null) {
+                swal("Error!", "Fail to get ticket information!", "error");
+                return;
+            } else {
+                const ticketData = $.ajax({
+                    "url": `/api/Ticket/${ticketId}`,
+                    "method": "GET",
+                    "datatype": 'application/json',
+                    "async": false,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                }).responseJSON.data;
+                if (ticketData.length < 1) {
+                    swal("Error!", "Fail to get ticket information!", "error");
+                    return;
+                }
+                ticketDetail = ticketData;
+                let ticketCreatorName = CardData.lastname + " " + CardData.firstname;
+                let ticketComponent = "Deleted";
+                for (var i = 0; i < SupportComponentData.length; i++) {
+                    if (ticketDetail.idComponent == SupportComponentData[i].id) {
+                        ticketComponent = SupportComponentData[i].name;
+                        break;
+                    }
+                }
+                var ticketPriority = "LOW";
+                if (ticketDetail.priority == 2) {
+                    ticketPriority = "MEDIUM";
+                }
+                if (ticketDetail.priority == 3) {
+                    ticketPriority = "HIGH";
+                }
+                $('#ticketTitle').text(ticketDetail.title);
+                $('#ticketCreator').text(ticketCreatorName);
+                $('#ticketPriority').text(ticketPriority);
+                $('#ticketComponent').text(ticketComponent);
+                $('#ticketDate').text(moment(ticketDetail.creationdate).format('DD/MM/YYYY  HH:mm:ss'));
+                $('#ticketDescription').text(ticketDetail.description);
+                $(`#ticketStatus option[value=${ticketDetail.status}]`).attr('selected', 'selected');
+                TicketComments(ticketDetail.id, ticketCreatorName);
+            }
+        }
+        $(document).ready(function (e) {
+            GetTicketDetail();
+        });
+        $('#updateCommentBtn').on('click', function (e) {
+            e.preventDefault();
+            let comment = $('#ticketComment').val();
+            const params = new URLSearchParams(location.search);
+            const ticketId = params.get("ticketId");
+            if (ticketId == null) {
+                swal("Error!", "Fail to get ticket information!", "error");
+                return;
+            } else {
+                let ticketStatus = $('#ticketStatus').val();
+                ticketDetail.status = parseInt(ticketStatus);
+                $.ajax({
+                    url: `/api/Ticket/${ticketId}`,
+                    method: "PUT",
+                    data: JSON.stringify(ticketDetail),
+                    datatype: 'application/json',
+                    async: false,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                });
+                let ticketComment = {
+                    date: moment(new Date()).format("YYYY-MM-DDTHH:mm:ss"),
+                    idTicket: parseInt(ticketId),
+                    description: comment,
+                    creator: parseInt(localStorage.getItem("CARDID")),
+                    creatorType: 0,
+                    viewedCust: 0,
+                    viewedAgent: 1,
+                    viewedAdmin : 1
+                }
+                $.ajax({
+                    url: `/api/TicketComment`,
+                    method: "POST",
+                    data: JSON.stringify(ticketComment),
+                    datatype: 'application/json',
+                    async: false,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    },
+                    success: function (result) {
+                        window.location.replace(`/Home/TicketDetail?ticketId=${ticketId}`);
+                    }, error: function (ex) {
+                        console.log(ex);
+                        swal("Update Failed!", "Something wrong when update!", "warning");
+                    }
+                })
+            }
+        });
+    </script>
+}
+
+

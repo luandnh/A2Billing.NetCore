@@ -1,0 +1,152 @@
+﻿
+@{
+    ViewData["Title"] = "Cards";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">--CARD LIST--</h6>
+        <div class="dropdown no-arrow">
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(17px, 19px, 0px);">
+                <div class="dropdown-header">Actions:</div>
+                <a class="dropdown-item" href="/Admin/CardNew">Add</a>
+                <a class="dropdown-item" href="#" onclick="GeneratePasswordForAllAcount()">Generate Password MD5</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Account Number</th>
+                        <th>Login</th>
+                        <th>Lastname</th>
+                        <th>Firstname</th>
+                        <th>Balance</th>
+                        <th>Last Use</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        function CreateDataTable() {
+            $('#dataTable').DataTable().destroy();
+            $('#dataTable').DataTable({
+                info: false,
+                paging: true,
+                ordering: true,
+                lengthChange: false,
+                data: $.ajax({
+                    "url": `/api/card`,
+                    "method": "GET",
+                    "datatype": 'application/json',
+                    "async": false,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                }).responseJSON.data,
+                columns: [
+                    {
+                        data: 'id'
+                    },
+                    {
+                        data: {
+                            id: 'id',
+                            username: 'username'
+                        },
+                        render: function (data) {
+                            return '<a href="/Admin/CardDetail?id=' + data.id + '">' + data.username + '</a>';
+                        }
+                    },
+                    {
+                        data: 'useralias'
+                    },
+                    {
+                        data: 'lastname'
+                    },
+                    {
+                        data: 'firstname'
+                    },
+                    {
+                        data: 'credit'
+                    },
+                    {
+                        data: 'lastuse',
+                        render: function (data) {
+                            var date = moment(data).format('DD/MM/YYYY  HH:mm:ss');
+                            return date;
+                        }
+                    },
+                    {
+                        data: 'status',
+                        render: function (data) {
+                            return data == 1 ? "ACTIVATED" : "NOT ACTIVATED";
+                        }
+                    },
+                    {
+                        data: 'id',
+                        render: function (data) {
+                            return '<a class="btn btn-primary btn-circle btn-sm" href="/Admin/CardDetail?id=' + data + '"><i class="fas fa-eye"></i></a>';
+                        },
+                    }
+                ]
+            });
+        }
+        function GeneratePasswordForAllAcount() {
+            swal({
+                title: "Generate Password",
+                text: "Do you want to generate all password?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+            }).then(function (isConfirm) {
+                if (isConfirm.value == true) {
+                    $.ajax({
+                        url: `/api/CustomAPI/password/generate`,
+                        method: "POST",
+                        datatype: 'application/json',
+                        async: false,
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                        },
+                        success: function () {
+                            swal("Success", "Generate successful!", "success");
+                        },
+                        error: function () {
+                            swal("Error", "Generate failed!", "error");
+                        }
+                    });
+                };
+            });
+        }
+        $(document).ready(function (e) {
+            CreateDataTable();
+        });
+    </script>
+}

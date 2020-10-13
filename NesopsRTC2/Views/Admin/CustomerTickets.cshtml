@@ -1,0 +1,196 @@
+﻿
+@{
+    ViewData["Title"] = "CustomerTickets";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">-- SUPPORT COMPONENT LIST --</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Customer</th>
+                        <th>Account Number</th>
+                        <th>Title</th>
+                        <th>Creatation Date</th>
+                        <th>Component</th>
+                        <th>Priority</th>
+                        <th>Viewed</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        const CardData = $.ajax({
+            "url": `/api/Card`,
+            "method": "GET",
+            "datatype": 'application/json',
+            "async": false,
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+            }
+        }).responseJSON.data;
+        const SupportComponentData = $.ajax({
+            "url": `/api/SupportComponent`,
+            "method": "GET",
+            "datatype": 'application/json',
+            "async": false,
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+            }
+        }).responseJSON.data;
+        function CheckTicketViewed(ticketId) {
+            const TicketCommentData = $.ajax({
+                "url": `/api/TicketComment?ticketId=${ticketId}&viewedAdmin=false`,
+                "method": "GET",
+                "datatype": 'application/json',
+                "async": false,
+                "headers": {
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                }
+            }).responseJSON.data;
+            return TicketCommentData.length == 0 ? true : false;
+        }
+        function CreateDataTable() {
+            $('#dataTable').DataTable().destroy();
+            $('#dataTable').DataTable({
+                info: false,
+                paging: true,
+                ordering: true,
+                lengthChange: false,
+                data: $.ajax({
+                    "url": `/api/Ticket`,
+                    "method": "GET",
+                    "datatype": 'application/json',
+                    "async": false,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                }).responseJSON.data,
+                columns: [
+                    {
+                        data: 'id'
+                    },
+                    {
+                        data: 'creator',
+                        render: function (data) {
+                            for (var i = 0; i < CardData.length; i++) {
+                                if (data == CardData[i].id) {
+                                    return CardData[i].lastname +" "+ CardData[i].firstname;
+                                }
+                            }
+                        }
+                    },
+                    {
+                        data: 'creator',
+                        render: function (data) {
+                            for (var i = 0; i < CardData.length; i++) {
+                                if (data == CardData[i].id) {
+                                    return '<a href="/Admin/CardDetail?id=' + data + '">' + CardData[i].username + '</a>';
+                                }
+                            }
+                        }
+                    },
+                    {
+                        data: 'title'
+                    },
+                    {
+                        data: 'creationdate',
+                        render: function (data) {
+                            var date = moment(data).format('DD/MM/YYYY  HH:mm:ss');
+                            return date;
+                        }
+                    },
+                    {
+                        data: 'idComponent',
+                        render: function (data) {
+                            let status = "Deleted";
+                            for (var i = 0; i < SupportComponentData.length; i++) {
+                                if (data == SupportComponentData[i].id) {
+                                    status = SupportComponentData[i].name;
+                                    break;
+                                }
+                            }
+                            return status;
+                        }
+                    },
+                    {
+                        data: 'priority',
+                        render: function (data) {
+                            var status = "LOW";
+                            if (data == 2) {
+                                status = "MEDIUM";
+                            }
+                            if (data == 3) {
+                                status = "HIGH";
+                            }
+                            return status;
+                        }
+                    },
+                    {
+                        data: 'id',
+                        render: function (data) {
+                            return CheckTicketViewed(data) == false ?
+                                '<span class="bg-success text-white">New</span>' :
+                                '<span class="bg-primary text-white">Viewed</span>';
+                        }
+                    },
+                    {
+                        data: 'status',
+                        render: function (data) {
+                            var status = "New";
+                            if (data == 1) {
+                                status = "Fixed";
+                            }
+                            if (data == 2) {
+                                status = "Reopen";
+                            }
+                            if (data == 4) {
+                                status = "Invalid";
+                            }
+                            return status;
+                        }
+                    },
+                    {
+                        data: 'id',
+                        render: function (data) {
+                            return '<button class="btn btn-danger btn-circle btn-sm" onclick="DeleteTicket(' + data + ')"><i class="fas fa-trash"></i></button>'
+                            + '<a class="btn btn-success btn-circle btn-sm" href="/Admin/TicketDetail?ticketId='+data+'"><i class="far fa-eye"></i></a>';
+                        },
+                    }
+                ]
+            });
+        }
+        $(document).ready(function (e) {
+            CreateDataTable();
+        });
+    </script>
+}

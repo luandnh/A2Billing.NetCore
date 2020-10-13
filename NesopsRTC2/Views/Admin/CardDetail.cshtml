@@ -1,0 +1,247 @@
+﻿
+@{
+    ViewData["Title"] = "Card Detail";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Customer Information</h6>
+            </div>
+            <div class="card-body">
+                <form class="user" method="post">
+                    <div class="form-group row mb-1">
+                        <label for="usernameInput" class="col-sm-3 col-form-label">ACCOUNT NUMBER</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-user" id="usernameInput" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="useraliasInput" class="col-sm-3 col-form-label">WEBUI LOGIN</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-user" id="useraliasInput" required />
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="uipassInput" class="col-sm-3 col-form-label">WEBUI PASSWORD</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-user" id="uipassInput" required />
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="creditInput" class="col-sm-3 col-form-label">BALANCE</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-user" id="creditInput" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="customerGroup-select" class="col-sm-3 col-form-label">CUSTOMER GROUP</label>
+                        <div class="col-sm-9">
+                            <select class="custom-select" id="customerGroup-select">
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Personal Information</h6>
+            </div>
+            <div class="card-body">
+                <form class="user" method="post">
+                    <div class="form-group row mb-1">
+                        <label for="lastnameInput" class="col-sm-3 col-form-label">LAST NAME</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-user" id="lastnameInput" />
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="firstnameInput" class="col-sm-3 col-form-label">FIRST NAME</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-user" id="firstnameInput" />
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="emailInput" class="col-sm-3 col-form-label">EMAIL</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control form-control-user" id="emailInput" />
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="addressInput" class="col-sm-3 col-form-label">ADDRESS</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-user" id="addressInput" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card shadow mb-3">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Customer Status</h6>
+            </div>
+            <div class="card-body">
+                <form class="user" method="post">
+                    <div class="form-group row mb-1">
+                        <label for="callplan-select" class="col-sm-3 col-form-label">CALL PLAN</label>
+                        <div class="col-sm-9">
+                            <select class="custom-select" id="callplan-select">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="firstusedateInput" class="col-sm-3 col-form-label">FIRST USE DATE</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-user" id="firstusedateInput" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="lastuseInput" class="col-sm-3 col-form-label">LAST USE DATE</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-user" id="lastuseInput" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="expirationdateInput" class="col-sm-3 col-form-label">EXPIRY DATE</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-user" id="expirationdateInput" />
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="status-select" class="col-sm-3 col-form-label">STATUS</label>
+                        <div class="col-sm-9">
+                            <select class="custom-select" id="status-select">
+                                <option value="0">CANCELLED</option>
+                                <option value="1">ACTIVE</option>
+                                <option value="2">NEW</option>
+                                <option value="3">WAITING-MAILCONFIRMATION</option>
+                                <option value="4">RESERVED</option>
+                                <option value="5">EXPIRED</option>
+                                <option value="6">SUSPENDED FOR UNDERPAYMENT</option>
+                                <option value="7">SUSPENDED FOR LITIGATION</option>
+                                <option value="8">WAITING SUBSCRIPTION PAYMENT</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-secondary btn-icon-split float-right" id="updateBtn">
+            <span class="icon text-white-50">
+                <i class="fas fa-arrow-right"></i>
+            </span>
+            <span class="text">Update</span>
+        </button>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        let cardDetail = null;
+        const CardGroupData = $.ajax({
+            "url": `/api/CardGroup`,
+            "method": "GET",
+            "datatype": 'application/json',
+            "async": false,
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+            }
+        }).responseJSON.data;
+        const CallPlanData = $.ajax({
+            "url": `/api/Tariffgroup`,
+            "method": "GET",
+            "datatype": 'application/json',
+            "async": false,
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+            }
+        }).responseJSON.data;
+        function GetCardDetail() {
+            const params = new URLSearchParams(location.search);
+            const cardId = params.get("id");
+            if (cardId == null) {
+                swal("Error!", "Fail to get customer information!", "error");
+                return;
+            } else {
+                let cardData = $.ajax({
+                    "url": `/api/Card/${cardId}`,
+                    "method": "GET",
+                    "datatype": 'application/json',
+                    "async": false,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                }).responseJSON.data;
+                if (cardData.length < 1) {
+                    swal("Error!", "Fail to get customer information!", "error");
+                    return;
+                }
+                cardDetail = cardData;
+                Object.keys(cardDetail).forEach(key => {
+                    $(`#${key}Input`).val(cardDetail[key]);
+                })
+                for (let i = 0; i < CardGroupData.length; i++) {
+                    let newOption = $('<option value="' + CardGroupData[i].id + '">' + CardGroupData[i].name + '</option>');
+                    $("#customerGroup-select").append(newOption);
+                }
+                for (let i = 0; i < CallPlanData.length; i++) {
+                    let newOption = $('<option value="' + CallPlanData[i].id + '">' + CallPlanData[i].tariffgroupname + '</option>');
+                    $("#callplan-select").append(newOption);
+                }
+                $(`#customerGroup-select option[value=${cardDetail.idGroup}]`).attr('selected', 'selected');
+                $(`#callplan-select option[value=${cardDetail.tariff}]`).attr('selected', 'selected');
+                $(`#status-select option[value=${cardDetail.status}]`).attr('selected', 'selected');
+            }
+        }
+
+        $(document).ready(function (e) {
+            GetCardDetail();
+        });
+        $('#updateBtn').on('click', function (e) {
+            e.preventDefault();
+
+
+            cardDetail.useralias = $('#useraliasInput').val();
+            cardDetail.uipass = $('#uipassInput').val();
+            cardDetail.idGroup = parseInt($('#customerGroup-select').val());
+            cardDetail.lastname = $('#lastnameInput').val();
+            cardDetail.firstname = $('#firstnameInput').val();
+            cardDetail.email = $('#emailInput').val();
+            cardDetail.address = $('#addressInput').val();
+            cardDetail.expirationdate = $('#expirationdateInput').val();
+            cardDetail.status = parseInt($('#status-select').val());
+
+            $.ajax({
+                url: `/api/Card/${cardDetail.id}`,
+                method: "PUT",
+                data: JSON.stringify(cardDetail),
+                datatype: 'application/json',
+                async: false,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                },
+                success: function (result) {
+                    window.location.replace(`/Admin/Cards`);
+                }, error: function (ex) {
+                    console.log(ex);
+                    swal("Update Failed!", "Something wrong when Update!", "warning");
+                }
+            })
+        });
+    </script>
+}

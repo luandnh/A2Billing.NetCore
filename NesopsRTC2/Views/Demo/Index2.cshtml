@@ -1,0 +1,422 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutDemo.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Sip Connect</h6>
+            </div>
+            <div class="card-body">
+                <form class="user" id="sip-connect-form" method="post">
+                    <div class="form-group row">
+                        <label for="server" class="col-sm-3 col-form-label">Server</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="server" class="form-control form-control-user" id="server" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="username" class="col-sm-3 col-form-label">Username</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="username" class="form-control form-control-user" id="username" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="password" class="col-sm-3 col-form-label">Password</label>
+                        <div class="col-sm-9">
+                            <input type="password" name="password" class="form-control form-control-user" id="password" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <button class="btn btn-primary btn-user btn-block" id="login-button" type="submit">
+                            <i class="fas fa-edit"></i>Login
+                        </button>
+                    </div>
+                    <div class="form-group row">
+                        <button class="btn btn-danger btn-user btn-block" id="logout-button" type="button" disabled>
+                            <i class="fas fa-edit"></i>Logout
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Phone</h6>
+            </div>
+            <audio id="ringToneAudio">
+                <source src="~/vendor/mp3/ringtone.mp3" type="audio/mpeg" />
+            </audio>
+            <div class="card-body" id="user-agent">
+                <div class="form-group row">
+                    <label for="destination-input" class="col-sm-4 col-form-label">Extension</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="destination-input" class="form-control form-control-user font-weight-bolder" id="destination-input" required />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <audio id="remote-audio"></audio>
+                    <div class="col-lg-6">
+                        <div id="volume-bar">
+                            <input type="range" id="volume-range" min="0" max="100" value="50" />
+                            <button id="mute-button" class="btn btn-outline-success btn-user btn-block off">Mute</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="video-switch-button">
+                            <label class="custom-control-label" for="video-switch-button">Video</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <button class="btn btn-info btn-user btn-block" id="invite-button" type="button">
+                        Invite Session
+                    </button>
+                    <button class="btn btn-warning btn-user btn-block" id="terminate-button" type="button">
+                        Terminate
+                    </button>
+                    <button class="btn btn-success btn-user btn-block" id="accept-button" type="button" disabled>
+                        Accept Session
+                    </button>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4 p-1">
+                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(1);">1</button>
+                    </div>
+                    <div class="col-4 p-1">
+                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(2);">2</button>
+                    </div>
+                    <div class="col-4 p-1">
+                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(3);">3</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4 p-1">
+                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(4);">4</button>
+                    </div>
+                    <div class="col-4 p-1">
+                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(5);">5</button>
+                    </div>
+                    <div class="col-4 p-1">
+                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(6);">6</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4 p-1">
+                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(7);">7</button>
+                    </div>
+                    <div class="col-4 p-1">
+                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(8);">8</button>
+                    </div>
+                    <div class="col-4 p-1">
+                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(9);">9</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-4 p-1">
+                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber('del');">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </div>
+                    <div class="col-4 p-1">
+                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(0);">0</button>
+                    </div>
+                    <div class="col-4 p-1">
+                        <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber('#')">#</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Message Box</h6>
+            </div>
+            <div class="card-body">
+                <video id="remote-video"></video>
+                <div class="col-12" id="message-display" style="max-height:40%;height:300px;overflow-y:scroll;border:solid 1px black;">
+                    <p class="message"><span id="message-from"></span>: <span class="message-body placeholder">No messages yet</span></p>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" name="message-text" class="form-control form-control-user" id="message-input" required />
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-primary btn-user btn-block" id="send-button" type="button">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/js/sip-0.15.10.min.js"></script>
+    <script type="text/javascript">
+        function MyApp() {
+            /* Form Login */
+            this.identityForm = document.getElementById('sip-connect-form');
+            this.username = document.getElementById("username");
+            this.password = document.getElementById("password");
+            this.server = document.getElementById("server");
+            this.loginButton = document.getElementById("login-button");
+
+            /*Logout Button*/
+            this.logoutButton = document.getElementById("logout-button");
+            this.logoutButton.addEventListener('click', this.logoutUA.bind(this), false);
+
+            /*Play music Button*/
+            this.ringTone = document.getElementById("ringToneAudio");
+
+            /*Destination Input (Extension)*/
+            this.destinationInput = document.getElementById('destination-input');
+
+            /*Remote Media (Audio)*/
+            this.remoteAudio = document.getElementById('remote-audio');
+            this.remoteAudio.volume = 0.5;
+            /*Remote Media (Video)*/
+            this.remoteVideo = document.getElementById('remote-video');
+
+            this.volumeRange = document.getElementById('volume-range');
+            this.volumeRange.addEventListener('change', this.setVolume.bind(this), false);
+
+            this.muteButton = document.getElementById('mute-button');
+            this.muteButton.addEventListener('click', this.toggleMute.bind(this), false);
+            /*Accept Call Button*/
+            this.acceptButton = document.getElementById('accept-button');
+            this.acceptButton.addEventListener('click', this.acceptSession.bind(this), false);
+            /*Invite Call Button*/
+            this.inviteButton = document.getElementById('invite-button');
+            this.inviteButton.addEventListener('click', this.sendInvite.bind(this), false);
+            /*Terminate Call Button*/
+            this.terminateButton = document.getElementById('terminate-button');
+            this.terminateButton.addEventListener('click', this.terminateSession.bind(this), false);
+
+            /*Send Message*/
+            this.messageInput = document.getElementById('message-input');
+            this.sendButton = document.getElementById('send-button');
+            this.sendButton.addEventListener('click', this.sendMessageSession.bind(this), false);
+
+            /*Video Switch Box*/
+            this.videoButton = document.getElementById('video-switch-button');
+            this.videoButton.addEventListener('click', this.videoSwitchFunc.bind(this), false);
+            this.videoCall = false;
+            this.videoButton.checked = false;
+        }
+
+        MyApp.prototype = {
+            /* Create user agent */
+            createUA: function () {
+                var username = this.username.value;
+                var password = this.password.value;
+                var server = this.server.value;
+                var loginButton = this.loginButton;
+                var logoutButton = this.logoutButton;
+
+                var credential = {
+                    uri: `${username}@@${server}`,
+                    authorizationUser: `${username}`,
+                    wsServers: [`ws://${server}:8088/ws`],
+                    password: `${password}`,
+                    displayName: `${username}`
+                };
+                //this.ua = new SIP.UA(credential);
+                this.simple = new SIP.Web.Simple({
+                    media: {
+                        remote: {
+                            audio: this.remoteAudio,
+                            video: this.remoteVideo
+                        }
+                    },
+                    ua: credential
+                });
+
+                this.simple.on('unregistered', function (cause) {
+                    console.log('unregistered', cause);
+                    loginButton.innerHTML = "UnRegistered! Logout and Login Again!";
+                    logoutButton.disabled = false;
+                });
+                this.simple.on('registrationFailed', function (cause) {
+                    console.log('registrationFailed', cause);
+                    loginButton.innerHTML = "Registration Failed! Login Again!";
+                    logoutButton.disabled = true;
+                });
+
+                this.simple.on('ringing', this.handleInvite.bind(this));
+                this.simple.on('message', function (message) {
+                    alert(message.body);
+                });
+                this.simple.ua.on('message', function (message) {
+                    alert(message.body);
+                });
+                this.simple.on('registered', function (cause) {
+                    loginButton.innerHTML = "Successful!";
+                    loginButton.disabled = true;
+                    logoutButton.disabled = false;
+                });
+            },
+            logoutUA: function () {
+                if (!this.simple) { return; }
+                this.simple.ua.stop();
+                this.loginButton.innerHTML = "Login";
+                this.loginButton.disabled = false;
+            },
+            /* Handle destination call */
+            handleInvite: function (session) {
+                this.setSession(session);
+                this.setStatus('Ring ring! ' + session.remoteIdentity.uri.toString() + ' is calling!', true);
+                this.acceptButton.disabled = false;
+                playRingTone();
+                swal("New Call", 'Ring ring! ' + session.remoteIdentity.uri.toString() + ' is calling!', "warning");
+            },
+            /* Accept destination call */
+            acceptSession: function () {
+                if (!this.session) { return; }
+
+                this.acceptButton.disabled = true;
+                this.session.accept({
+                    sessionDescriptionHandlerOptions: {
+                        constraints: {
+                            audio: true,
+                            video: this.videoCall
+                        }
+                    }
+                });
+                stopRingTone();
+            },
+            /* Invite destination to call */
+            sendInvite: function () {
+                // Replace `welcome@onsip.com` with your own SIP address
+                //var session = this.ua.invite("1061", {
+                //    sessionDescriptionHandlerOptions: {
+                //        constraints: {
+                //            audio: true,
+                //            video: false
+                //        }
+                //    }
+                //});
+
+                var destination = this.destinationInput.value;
+                if (!destination) { return; }
+                //var session = this.simple.call(destination);
+                var session = this.simple.ua.invite(destination, {
+                    sessionDescriptionHandlerOptions: {
+                        constraints: {
+                            audio: true,
+                            video: this.videoCall
+                        }
+                    }
+                });
+
+                // Save the session so we can listen for status events.
+                this.setSession(session);
+
+                // Prevent creating multiple calls.
+                this.inviteButton.disabled = true;
+            },
+            /* Initialize event listeners and save the session for later access. */
+            setSession: function (session) {
+                session.on('progress', function () {
+                    this.setStatus('Ringing...', true);
+                }.bind(this));
+
+                session.on('accepted', function () {
+                    this.setStatus('Connected!', true);
+                }.bind(this));
+
+                session.on('failed', function () {
+                    this.setStatus('Call failed. Try again?', false);
+                    if (session === this.session) {
+                        delete this.session;
+                    }
+                }.bind(this));
+
+                session.on('bye', function () {
+                    this.setStatus('Bye! Invite Another?', false);
+                    if (session === this.session) {
+                        delete this.session;
+                    }
+                }.bind(this));
+
+                this.session = session;
+            },
+            /* Update the UI, enabling or disabling new Invites as necessary. */
+            setStatus: function (status, disable) {
+                this.inviteButton.innerHTML = status;
+                this.inviteButton.disabled = disable;
+            },
+            /* Cancel session */
+            terminateSession: function () {
+                if (!this.session) { return; }
+
+                this.session.terminate();
+                stopRingTone();
+            },
+            /* Set volume call */
+            setVolume: function () {
+                this.remoteAudio.volume = (parseInt(this.volumeRange.value, 10) || 0) / 100;
+            },
+            toggleMute: function () {
+                if (!this.session) { return; }
+
+                // Mute and unmute are toggled based on the button's CSS class.
+                if (this.muteButton.classList.contains('on')) {
+                    this.session.unmute();
+                    this.muteButton.classList.remove('on');
+                } else {
+                    this.session.mute();
+                    this.muteButton.classList.add('on');
+                }
+            },
+            /* Send message session */
+            sendMessageSession: function () {
+                let msg = this.messageInput.value;
+                var destination = this.destinationInput.value;
+                this.simple.message(destination, msg);
+                console.log(msg);
+            },
+            videoSwitchFunc: function () {
+                this.videoCall = this.videoButton.checked;
+                console.log(this.videoCall);
+            },
+        };
+        $(function () {
+            /* Login Function */
+            $("#sip-connect-form").on("submit", function (e) {
+                e.preventDefault();
+                var myApp = new MyApp();
+                myApp.createUA();
+            });
+        });
+
+        function phoneNumber(character) {
+            var destination = document.getElementById('destination-input');
+            var destinationString = destination.value.toString();
+            if (character == "del") {
+                if (!destinationString) { return; }
+                else {
+                    destinationString = destinationString.substring(0, destinationString.length - 1);
+                }
+            } else {
+                destinationString = destinationString + character;
+            }
+            destination.value = destinationString;
+        }
+        function playRingTone() {
+            document.getElementById('ringToneAudio').play();
+        }
+        function stopRingTone() {
+            document.getElementById('ringToneAudio').pause();
+            document.getElementById('ringToneAudio').currentTime = 0;
+        }
+    </script>
+}

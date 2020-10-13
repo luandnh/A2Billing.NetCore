@@ -1,0 +1,175 @@
+﻿
+@{
+    ViewData["Title"] = "Vouchers";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">-- GENERATE VOUCHERS --</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="voucherQuantity-select">Number of vouchers</label>
+                        <select class="custom-select" id="voucherQuantity-select">
+                            <option selected value="0">0</option>
+                            <option value="5">5 Vouchers</option>
+                            <option value="10">10 Vouchers</option>
+                            <option value="20">20 Vouchers</option>
+                            <option value="50">50 Vouchers</option>
+                            <option value="100">100 Vouchers</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="voucherAmount">Amount of credit</label>
+                        <input class="form-control" type="text" id="voucherAmount" />
+                    </div>
+                </div>   
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="voucherExprireDate">Expire Date</label>
+                        <input class="form-control" type="date" id="voucherExprireDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <button class="btn btn-danger btn-icon-split float-right" id="genarateBtn">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                    <span class="text">Generate</span>
+                </button>
+            </div>
+        </div>
+    </div>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">-- VOUCHER LIST --</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Voucher</th>
+                        <th>Credit</th>
+                        <th>Activated</th>
+                        <th>Used</th>
+                        <th>Account Used</th>
+                        <th>Created Date</th>
+                        <th>Used Date</th>
+                        <th>Currency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        function CreateDataTable() {
+            $('#dataTable').DataTable().destroy();
+            $('#dataTable').DataTable({
+                info: false,
+                paging: true,
+                ordering: true,
+                lengthChange: false,
+                data: $.ajax({
+                    "url": `/api/Voucher`,
+                    "method": "GET",
+                    "datatype": 'application/json',
+                    "async": false,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                }).responseJSON.data,
+                columns: [
+                    {
+                        data: 'id'
+                    },
+                    {
+                        data: 'voucher'
+                    },
+                    {
+                        data: 'credit'
+                    },
+                    {
+                        data: 'activated',
+                        render: function (data) {
+                            return data == 't' ? "Active" : "Deactive";
+                        }
+                    },
+                    {
+                        data: 'used',
+                        render: function (data) {
+                            return data == 0 ? "Not Used" : "Used";
+                        }
+                    },
+                    {
+                        data: 'usedcardnumber'
+                    },
+                    {
+                        data: 'creationdate'
+                    },
+                    {
+                        data: 'usedate'
+                    },
+                    {
+                        data: 'currency'
+                    }
+                ]
+            });
+        }
+        $(document).ready(function (e) {
+            CreateDataTable();
+            const voucherExDate = new Date();
+            voucherExDate.setFullYear(voucherExDate.getFullYear() + 10);
+            var voucherExDateString = moment(voucherExDate).format('YYYY-MM-DD');
+            $('#voucherExprireDate').val(voucherExDateString);
+            $('#genarateBtn').on('click', function (e) {
+            e.preventDefault();
+            const generateVoucher = {
+                exprireDate : moment($('#voucherExprireDate').val(),"YYYY-MM-DD").toJSON(),
+                quantity : parseInt($('#voucherQuantity-select').val()),
+                credit : parseInt($('#voucherAmount').val())
+            };
+            $.ajax({
+                url: `/api/CustomAPI/voucher/generate`,
+                method: "POST",
+                data: JSON.stringify(generateVoucher),
+                datatype: 'application/json',
+                async: false,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                },
+                success: function (result) {
+                    window.location.replace(`/Admin/Vouchers`);
+                }, error: function (ex) {
+                    console.log(ex);
+                    swal("Update Failed!", "Something wrong when Update!", "warning");
+                }
+            })
+        });
+        });
+        
+    </script>
+}

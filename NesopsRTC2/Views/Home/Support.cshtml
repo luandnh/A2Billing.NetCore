@@ -1,0 +1,250 @@
+﻿
+@{
+    ViewData["Title"] = "Support";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">-- NEW TICKET --</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label for="ticketTitle">Title</label>
+                    <input class="form-control" type="text" id="ticketTitle" />
+                </div>
+                <div class="form-group">
+                    <label for="priority-select">Priority</label>
+                    <select class="custom-select" id="ticket-priority-select">
+                        <option selected value="0">None</option>
+                        <option value="1">Low</option>
+                        <option value="2">Medium</option>
+                        <option value="3">High</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label for="ticket-component-select">Component</label>
+                    <select class="custom-select" id="ticket-component-select">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ticketDescription">Description</label>
+                    <textarea class="form-control" type="text" id="ticketDescription"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <button class="btn btn-danger btn-icon-split float-right" id="createBtn">
+                <span class="icon text-white-50">
+                    <i class="fas fa-arrow-right"></i>
+                </span>
+                <span class="text">Create</span>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">-- SUPPORT COMPONENT LIST --</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Creatation Date</th>
+                        <th>Component</th>
+                        <th>Priority</th>
+                        <th>Viewed</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        const SupportComponentData = $.ajax({
+            "url": `/api/SupportComponent`,
+            "method": "GET",
+            "datatype": 'application/json',
+            "async": false,
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+            }
+        }).responseJSON.data;
+        function CheckTicketViewed(ticketId) {
+            const TicketCommentData = $.ajax({
+                "url": `/api/TicketComment?ticketId=${ticketId}&viewedCust=false`,
+                "method": "GET",
+                "datatype": 'application/json',
+                "async": false,
+                "headers": {
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                }
+            }).responseJSON.data;
+            return TicketCommentData.length == 0 ? true : false;
+        }
+        function CreateDataTable() {
+            $('#dataTable').DataTable().destroy();
+            $('#dataTable').DataTable({
+                info: false,
+                paging: true,
+                ordering: true,
+                lengthChange: false,
+                data: $.ajax({
+                    "url": `/api/Ticket?cardId=${localStorage.getItem("CARDID")}`,
+                    "method": "GET",
+                    "datatype": 'application/json',
+                    "async": false,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                }).responseJSON.data,
+                columns: [
+                    {
+                        data: 'id'
+                    },
+                    {
+                        data: 'title'
+                    },
+                    {
+                        data: 'creationdate',
+                        render: function (data) {
+                            var date = moment(data).format('DD/MM/YYYY  HH:mm:ss');
+                            return date;
+                        }
+                    },
+                    {
+                        data: 'idComponent',
+                        render: function (data) {
+                            let status = "Deleted";
+                            for (var i = 0; i < SupportComponentData.length; i++) {
+                                if (data == SupportComponentData[i].id) {
+                                    status = SupportComponentData[i].name;
+                                    break;
+                                }
+                            }
+                            return status;
+                        }
+                    },
+                    {
+                        data: 'priority',
+                        render: function (data) {
+                            var status = "LOW";
+                            if (data == 2) {
+                                status = "MEDIUM";
+                            }
+                            if (data == 3) {
+                                status = "HIGH";
+                            }
+                            return status;
+                        }
+                    },
+                    {
+                        data: 'id',
+                        render: function (data) {
+                            return CheckTicketViewed(data) == false ?
+                                '<span class="bg-success text-white">New</span>' :
+                                '<span class="bg-primary text-white">Viewed</span>';
+                        }
+                    },
+                    {
+                        data: 'status',
+                        render: function (data) {
+                            var status = "New";
+                            if (data == 1) {
+                                status = "Fixed";
+                            }
+                            if (data == 2) {
+                                status = "Reopen";
+                            }
+                            if (data == 4) {
+                                status = "Invalid";
+                            }
+                            return status;
+                        }
+                    },
+                    {
+                        data: 'id',
+                        render: function (data) {
+                            return '<a class="btn btn-success btn-circle btn-sm" href="/Home/TicketDetail?ticketId=' + data + '"><i class="far fa-eye"></i></a>';
+                        },
+                    }
+                ]
+            });
+        };
+        function InitializeComponentSelect() {
+            let componentSelect = $('#ticket-component-select');
+            for (let i = 0; i < SupportComponentData.length; i++) {
+                let newOption = $('<option value="' + SupportComponentData[i].id + '">' + SupportComponentData[i].name + '</option>');
+                componentSelect.append(newOption);
+            }
+        };
+        $(document).ready(function (e) {
+            CreateDataTable();
+            InitializeComponentSelect();
+        });
+        $('#createBtn').on('click', function (e) {
+            e.preventDefault();
+            const componentSelect = $('#ticket-component-select').val();
+            const priority = $('#ticket-priority-select').val();
+            const title = $('#ticketTitle').val();
+            const description = $('#ticketDescription').val();
+            const ticket = {
+                idComponent: parseInt(componentSelect),
+                title: title,
+                description: description,
+                priority: parseInt(priority),
+                creationdate: moment(new Date()).format("YYYY-MM-DDTHH:mm:ss"),
+                creator: parseInt(localStorage.getItem("CARDID")),
+                status: 0,
+                creatorType: 0,
+                viewedCust: 0,
+                viewedAgent: 0,
+                viewedAdmin: 1
+            };
+            $.ajax({
+                url: `/api/Ticket`,
+                method: "POST",
+                data: JSON.stringify(ticket),
+                datatype: 'application/json',
+                async: false,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                },
+                success: function (result) {
+                    window.location.replace(`/Home/Support`);
+                }, error: function (ex) {
+                    console.log(ex);
+                    swal("Create Failed!", "Something wrong when Create!", "warning");
+                }
+            })
+        });
+    </script>
+}
+
+

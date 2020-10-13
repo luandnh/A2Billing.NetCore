@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Payment History</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                        <th>Added Refill</th>
+                        <th>Decription</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        function CreateDataTable() {
+            $('#dataTable').DataTable().destroy();
+            $('#dataTable').DataTable({
+                info: false,
+                paging: true,
+                ordering: true,
+                lengthChange: false,
+                data: $.ajax({
+                    "url": `/api/logpayment?cardId=${localStorage.getItem("CARDID")}`,
+                    "method": "GET",
+                    "datatype": 'application/json',
+                    "async": false,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                }).responseJSON.data,
+                columns: [
+                    {
+                        data: 'id'
+                    },
+                    {
+                        data: 'date',
+                        render: function (data) {
+                            var date = moment(data).format('DD/MM/YYYY  HH:mm:ss');
+                            return date;
+                        },
+                        width: "40%"
+                    },
+                    {
+                        data: 'payment',
+                        render: function (data, type, full) {
+                            return data + "$";
+                        }
+                    },
+                    {
+                        data: 'paymentType',
+                        render: function (data, type, full) {
+                            if (data == 1) {
+                                return "Correction";
+                            }
+                            if (data == 2) {
+                                return "Extra Fee";
+                            }
+                            if (data == 3) {
+                                return "Agent Refund";
+                            }
+                            return "Amount";
+                        }
+                    },
+                    {
+                        data: 'addedRefill',
+                        render: function (data, type, full) {
+                            if (data == 0) {
+                                return "No";
+                            }
+                            return "Yes";
+                        }
+                    },
+                    {
+                        data: 'description'
+                    },
+                ]
+            });
+        }
+        $(document).ready(function (e) {
+            CreateDataTable();
+        });
+    </script>
+}
+

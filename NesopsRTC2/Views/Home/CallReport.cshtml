@@ -1,0 +1,301 @@
+﻿
+@{
+    ViewData["Title"] = "CallReport";
+}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">-- Search --</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="daterange">Date</label>
+                            <input class="form-control" type="text" id="daterange" name="daterange" value="01/01/2018 - 01/15/2018" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="customer-select">Call Status</label>
+                            <select class="custom-select" id="callStatus-select">
+                                <option value="0">All</option>
+                                <option value="1">Answered</option>
+                                <option value="2">Busy</option>
+                                <option value="4">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <button class="btn btn-secondary btn-icon-split float-right" id="searchBtn">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-arrow-right"></i>
+                        </span>
+                        <span class="text">Search</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">-- Detail --</h6>
+            </div>
+            <div class="card-body">
+                <div class="col-md-12">
+                    <h5><span class="font-weight-bold">Total : </span><span id="totalCallParam"></span> </h5>
+                    <h5><span class="font-weight-bold">Answered : </span><span id="answeredCallParam"></span> </h5>
+                    <h5><span class="font-weight-bold">Cancelled : </span><span id="cancelledCallParam"></span> </h5>
+                    <h5><span class="font-weight-bold">Busy : </span><span id="busyCallParam"></span> </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">-- CALL LOGS --</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Account</th>
+                        <th>DNID</th>
+                        <th>Phone Number</th>
+                        <th>Duration</th>
+                        <th>Buy</th>
+                        <th>Sell</th>
+                        <th>Trunk</th>
+                        <th>Buy Rate</th>
+                        <th>Sell Rate</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        const TrunkData = $.ajax({
+            "url": `/api/trunks`,
+            "method": "GET",
+            "datatype": 'application/json',
+            "async": false,
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+            }
+        }).responseJSON.data;
+        const RatecardData = $.ajax({
+            "url": `/api/RateCard`,
+            "method": "GET",
+            "datatype": 'application/json',
+            "async": false,
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+            }
+        }).responseJSON.data;
+        const CardData = $.ajax({
+            "url": `/api/Card`,
+            "method": "GET",
+            "datatype": 'application/json',
+            "async": false,
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+            }
+        }).responseJSON.data;
+        function CreateDataTable(apiLink) {
+            $('#dataTable').DataTable().destroy();
+            $('#dataTable').DataTable({
+                info: false,
+                paging: true,
+                ordering: true,
+                lengthChange: false,
+                data: $.ajax({
+                    "url": apiLink,
+                    "method": "GET",
+                    "datatype": 'application/json',
+                    "async": false,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                }).responseJSON.data,
+                columns: [
+                    {
+                        data: 'starttime',
+                        render: function (data) {
+                            var date = moment(data).format('DD/MM/YYYY  HH:mm:ss');
+                            return date;
+                        }
+                    },
+                    {
+                        data: 'cardId',
+                        render: function (data) {
+                            for (var i = 0; i < CardData.length; i++) {
+                                if (data == CardData[i].id) {
+                                    return CardData[i].username;
+                                }
+                            }
+                        }
+                    },
+                    {
+                        data: 'dnid'
+                    },
+                    {
+                        data: 'calledstation'
+                    },
+                    {
+                        data: 'sessiontime'
+                    },
+                    {
+                        data: 'buycost'
+                    },
+                    {
+                        data: 'sessionbill'
+                    },
+                    {
+                        data: 'idTrunk',
+                        render: function (data) {
+                            for (var i = 0; i < TrunkData.length; i++) {
+                                if (data == TrunkData[i].idTrunk) {
+                                    return TrunkData[i].trunkcode;
+                                }
+                            }
+                            return "Deleted";
+                        }
+                    },
+                    {
+                        data: 'idRatecard',
+                        render: function (data) {
+                            for (var i = 0; i < RatecardData.length; i++) {
+                                if (data == RatecardData[i].id) {
+                                    return RatecardData[i].buyrate;
+                                }
+                            }
+                            return "Deleted";
+                        }
+                    },
+                    {
+                        data: 'idRatecard',
+                        render: function (data) {
+                            for (var i = 0; i < RatecardData.length; i++) {
+                                if (data == RatecardData[i].id) {
+                                    return RatecardData[i].rateinitial;
+                                }
+                            }
+                            return "Deleted";
+                        }
+                    },
+                    {
+                        data: 'id',
+                        render: function (data) {
+                            return '<button class="btn btn-danger btn-circle btn-sm" onclick="DeleteCallLog(' + data + ')"><i class="fas fa-trash"></i></button>';
+                        },
+                        width: "5%"
+                    }
+                ]
+            });
+        }
+        $(document).ready(function (e) {
+            $('input[name="daterange"]').daterangepicker();
+            HandleQuery();
+            InitializeParams();
+        });
+        function HandleQuery() {
+            let apiLink = `/api/call?cardId=${localStorage.getItem("CARDID")}&`;
+            const params = new URLSearchParams(location.search);
+            const callStatus = params.get("callStatus");
+            if (callStatus != null) {
+                apiLink += `terminateCauseId=${callStatus}&`;
+            }
+            CreateDataTable(apiLink);
+            for (let i = 0; i < CardData.length; i++) {
+                newOption = $('<option value="' + CardData[i].id + '">' + CardData[i].username + '</option>');
+                $('#customer-select').append(newOption);
+            }
+            $(`#callStatus-select option[value=${callStatus}]`).attr('selected', 'selected');
+        };
+        function DeleteCallLog(id) {
+            swal({
+                title: "Delete",
+                text: "Do you want to remove this record?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+            }).then(function (isConfirm) {
+                console.log(isConfirm);
+                if (isConfirm.value == true) {
+                    $.ajax({
+                        url: `/api/call/${id}`,
+                        method: "DELETE",
+                        datatype: 'application/json',
+                        async: false,
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                        },
+                        success: function () {
+                            swal("Success", "Remove successful!", "success");
+                            window.location.href = "/Home/CallReport";
+                        },
+                        error: function () {
+                            swal("Error", "Remove failed!", "error");
+                        }
+                    });
+                };
+            });
+        }
+
+        function InitializeParams() {
+            const SystemData = $.ajax({
+                "url": `/api/Chart/accountdata/${localStorage.getItem("CARDID")}`,
+                "method": "GET",
+                "datatype": 'application/json',
+                "async": false,
+                "headers": {
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                }
+            }).responseJSON.data;
+            $('#totalCallParam').text(SystemData.Calls);
+            $('#answeredCallParam').text(SystemData.CallAnswered);
+            $('#cancelledCallParam').text(SystemData.CallCancelled);
+            $('#busyCallParam').text(SystemData.CallBusy);
+        }
+        $('#searchBtn').on('click', function (e) {
+            e.preventDefault();
+            let callLink = "/Home/CallReport?";
+            const callStatus = $('#callStatus-select').val();
+            if (callStatus != 0) {
+                callLink += `callStatus=${callStatus}`
+            }
+            window.location.href = callLink;
+        });
+    </script>
+}

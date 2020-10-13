@@ -1,0 +1,255 @@
+﻿
+@{
+    ViewData["Title"] = "Account";
+}
+<div class="row">
+    <div class="col-sm-10 col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Account</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <i class="far fa-user fa-w-14 fa-9x"></i>
+                    </div>
+                    <div class="col-md-5">
+                        <h5><span class="font-weight-bold">Last Name : </span><span id="lastnameInput"></span> </h5>
+                        <h5><span class="font-weight-bold">First Name : </span><span id="firstnameInput"></span> </h5>
+                        <h5><span class="font-weight-bold">WebUI : </span><span id="useraliasInput"></span> </h5>
+                    </div>
+                    <div class="col-md-5">
+                        <h5><span class="font-weight-bold">Username : </span><span id="usernameInput"></span> </h5>
+                        <h5><span class="font-weight-bold">Email : </span><span id="emailInput"></span> </h5>
+                        <h5><span class="font-weight-bold">Address : </span><span id="addressInput"></span> </h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="#" class="btn btn-secondary btn-icon-split float-right" data-target="#accountModal" data-toggle="modal">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-arrow-right"></i>
+                            </span>
+                            <span class="text">Update</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2 col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Balance</h6>
+            </div>
+            <div class="card-body text-center">
+                <h2 class="m-0 font-weight-bold" style="font-size:75px;">
+                    <span id="creditInput3"></span>
+                    <span>$</span>
+                </h2>
+                <a href="#" class="btn btn-outline-primary btn-icon-split" data-target="#voucherModal" data-toggle="modal">
+                    <span class="icon text-white-50">
+                        <i class="far fa-money-bill-alt"></i>
+                    </span>
+                    <span class="text">Use Voucher</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Voucher Modal-->
+<div class="modal fade" id="voucherModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Use Voucher</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="user" id="use-voucher-form" method="post">
+                    <div class="form-group">
+                        <input type="text" name="voucherCode" class="form-control form-control-user" id="voucherCode" placeholder="Enter Voucher Code..." required />
+                    </div>
+                    <button class="btn btn-primary btn-user btn-block" id="login-form-button" type="submit">
+                        Refill
+                    </button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Use Voucher</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form class="user" method="post">
+                            <div class="form-group row mb-1">
+                                <label for="usernameInput" class="col-sm-3 col-form-label">ACCOUNT NUMBER</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control form-control-user" id="usernameInput2" disabled />
+                                </div>
+                            </div>
+                            <div class="form-group row mb-1">
+                                <label for="useraliasInput" class="col-sm-3 col-form-label">WEBUI LOGIN</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control form-control-user" id="useraliasInput2" disabled />
+                                </div>
+                            </div>
+                            <div class="form-group row mb-1">
+                                <label for="uipassInput" class="col-sm-3 col-form-label">WEBUI PASSWORD</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control form-control-user" id="uipassInput2" required />
+                                </div>
+                            </div>
+                            <div class="form-group row mb-1">
+                                <label for="creditInput" class="col-sm-3 col-form-label">BALANCE</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control form-control-user" id="creditInput2" disabled />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <form class="user" method="post">
+                            <div class="form-group row mb-1">
+                                <label for="lastnameInput" class="col-sm-3 col-form-label">LAST NAME</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control form-control-user" id="lastnameInput2" />
+                                </div>
+                            </div>
+                            <div class="form-group row mb-1">
+                                <label for="firstnameInput" class="col-sm-3 col-form-label">FIRST NAME</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control form-control-user" id="firstnameInput2" />
+                                </div>
+                            </div>
+                            <div class="form-group row mb-1">
+                                <label for="emailInput" class="col-sm-3 col-form-label">EMAIL</label>
+                                <div class="col-sm-9">
+                                    <input type="email" class="form-control form-control-user" id="emailInput2" />
+                                </div>
+                            </div>
+                            <div class="form-group row mb-1">
+                                <label for="addressInput" class="col-sm-3 col-form-label">ADDRESS</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control form-control-user" id="addressInput2" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="updateBtn" class="btn btn-outline-primary float-left" type="button">Update</button>
+                <button class="btn btn-outline-secondary" type="button" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        var cardDetail = null;
+        function GetCardDetailAPI() {
+            const cardAPI = $.ajax({
+                url: `/api/card/${localStorage.getItem("CARDID")}`,
+                method: "GET",
+                datatype: 'application/json',
+                async: false,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                }
+            }).responseJSON.data;
+            cardDetail = cardAPI;
+            Object.keys(cardDetail).forEach(key => {
+                $(`#${key}Input`).text(cardDetail[key]);
+                $(`#${key}Input2`).val(cardDetail[key]);
+            })
+            $("#creditInput3").text(parseFloat(cardDetail.credit).toFixed(2));
+        }
+        $(document).ready(function (e) {
+            GetCardDetailAPI();
+        });
+        $(function () {
+            $('#use-voucher-form').on("submit", function (e) {
+                e.preventDefault();
+
+                swal({
+                    title: "Do you want to use this voucher?",
+                    text: "This voucher will not be able to use again!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                }).then(function (isConfirm) {
+                    if (isConfirm.value == true) {
+                        var voucherModel = {
+                            voucherCode: $('#voucherCode').val(),
+                            cardId: parseInt(localStorage.getItem("CARDID"))
+                        }
+                        console.log(voucherModel);
+                        $.ajax({
+                            url: `/Voucher/UseVoucher`,
+                            type: 'POST',
+                            data: JSON.stringify(voucherModel),
+                            contentType: 'application/json',
+                            timeout: 800000,
+                            async: false,
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                            }, success: function (result) {
+                                $('#voucherModal').modal('hide');
+                                swal("Successful!", "Use Voucher Successful", "success");
+                                GetCardDetailAPI();
+                            }, error: function (ex) {
+                                console.log(ex.responseJSON);
+                                swal("Error!", ex.responseJSON.message, "error");
+                            }
+                        });
+                    };
+                });
+            });
+            $('#updateBtn').on('click', function (e) {
+                e.preventDefault();
+
+                cardDetail.uipass = $('#uipassInput2').val();
+                cardDetail.lastname = $('#lastnameInput2').val();
+                cardDetail.firstname = $('#firstnameInput2').val();
+                cardDetail.email = $('#emailInput2').val();
+                cardDetail.address = $('#addressInput2').val();
+
+                $.ajax({
+                    url: `/api/Card/${cardDetail.id}`,
+                    method: "PUT",
+                    data: JSON.stringify(cardDetail),
+                    datatype: 'application/json',
+                    async: false,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    },
+                    success: function (result) {
+                        window.location.replace(`/Home/Account`);
+                    }, error: function (ex) {
+                        console.log(ex);
+                        swal("Update Failed!", "Something wrong when Update!", "warning");
+                    }
+                })
+            });
+        });
+    </script>
+}

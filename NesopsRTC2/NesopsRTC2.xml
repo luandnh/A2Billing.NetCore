@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NesopsRTC2</name>
+    </assembly>
+    <members>
+        <member name="M:NesopsRTC2.Controllers.API.CustomAPIController.GenerateVoucher(NesopsService.Models.RequestModels.VoucherGenerateModel,System.Threading.CancellationToken)">
+            <summary>
+            Generate Voucher Function
+            </summary>
+            <param name="model"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NesopsRTC2.Controllers.API.RateCardController">
+            <summary>
+            Rates API
+            </summary>
+        </member>
+        <member name="M:NesopsRTC2.Controllers.API.RateCardController.GetAll(NesopsService.Models.RequestModels.CcRatecardRequestModel,System.Threading.CancellationToken)">
+            <summary>
+            Get Rates
+            </summary>
+            <param name="requestModel"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NesopsRTC2.Controllers.API.TariffgroupController">
+            <summary>
+            CallPlans API
+            </summary>
+        </member>
+        <member name="M:NesopsRTC2.Controllers.API.TariffgroupController.GetAll(NesopsService.Models.RequestModels.CcTariffgroupRequestModel,System.Threading.CancellationToken)">
+            <summary>
+            Get CallPlans
+            </summary>
+            <param name="requestModel"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NesopsRTC2.Controllers.API.TariffplanController">
+            <summary>
+            RateCards API
+            </summary>
+        </member>
+        <member name="M:NesopsRTC2.Controllers.API.TariffplanController.GetAll(NesopsService.Models.RequestModels.CcTariffplanRequestModel,System.Threading.CancellationToken)">
+            <summary>
+            Get RateCards
+            </summary>
+            <param name="requestModel"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

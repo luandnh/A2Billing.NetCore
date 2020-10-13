@@ -1,0 +1,235 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-secondary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-sm-left font-weight-bold text-secondary text-uppercase mb-1">Total Calls</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="callsParam"></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-phone-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-sm-left font-weight-bold text-success text-uppercase mb-1">Call Duration (Second)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="callDurationParam"></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-sm-left font-weight-bold text-info text-uppercase mb-1">Refills</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="refillsParam"></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-money-bill-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-danger shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-sm-left font-weight-bold text-danger text-uppercase mb-1">Payments</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="paymentsParam"></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-money-bill-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-sm-left font-weight-bold text-info text-uppercase mb-1">Voucher (Used)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="vouchersParam"></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-donate fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-sm-left font-weight-bold text-warning text-uppercase mb-1">Supports</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="supportsParam"></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-comments fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-sm-left font-weight-bold text-primary text-uppercase mb-1">Total Cost</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="costParam"></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Calls</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="callChart" height="90" class="chartjs-render-monitor">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Call Status</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-pie">
+                    <canvas id="callPieChart" height="200" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/vendor/chart.js/Chart.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            const AccountData = $.ajax({
+                "url": `/api/Chart/accountdata/${localStorage.getItem("CARDID")}`,
+                "method": "GET",
+                "datatype": 'application/json',
+                "async": false,
+                "headers": {
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                }
+            }).responseJSON.data;
+            function InitializeParams() {
+                $('#callDurationParam').text(AccountData.CallDuration);
+                $('#refillsParam').text(AccountData.LogRefills);
+                $('#paymentsParam').text(AccountData.LogPayments);
+                $('#callsParam').text(AccountData.Calls);
+                $('#vouchersParam').text(AccountData.Vouchers);
+                $('#supportsParam').text(AccountData.Supports);
+                $('#costParam').text(AccountData.TotalCost + " USD");
+            }
+            function InitializeCallChart() {
+                const CallLogData = $.ajax({
+                    "url": `/api/Chart/logcall/${localStorage.getItem("CARDID")}`,
+                    "method": "GET",
+                    "datatype": 'application/json',
+                    "async": false,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                }).responseJSON.data;
+                let dataSets = [];
+                let labelSets = [];
+                Object.keys(CallLogData).forEach(key => {
+                    labelSets.push(key);
+                    dataSets.push(CallLogData[key]);
+                })
+                let callChart = document.getElementById('callChart').getContext('2d');
+                let myBarChart = new Chart(callChart, {
+                    type: 'bar',
+                    data: {
+                        labels: labelSets,
+                        datasets: [{
+                            label: 'Numbers of call',
+                            data: dataSets
+                        }]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Calls',
+                            fontSize: 25
+                        },
+                        legend: {
+                            display: true,
+                            labels: {
+                            }
+                        }
+                    }
+                });
+
+                let callPieChart = document.getElementById('callPieChart').getContext('2d');
+                let massPopChart = new Chart(callPieChart, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Answered Call', 'Busy Call', 'Cancelled'],
+                        datasets: [{
+                            data: [
+                                AccountData.CallAnswered,
+                                AccountData.CallBusy,
+                                AccountData.CallCancelled
+                            ],
+                            backgroundColor: [
+                                '#f8c291',
+                                '#f6b93b',
+                                '#3c6382'
+                            ]
+                        }]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Call Overview',
+                            fontSize: 25
+                        }
+                    }
+                });
+            }
+            InitializeParams();
+            InitializeCallChart();
+        });
+    </script>
+}

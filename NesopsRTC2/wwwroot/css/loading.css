@@ -1,0 +1,34 @@
+﻿.loading-modal {
+    display: none;
+    position: fixed;
+    z-index: 100000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba( 255, 255, 255, .9 ) url('../img/loading.gif') 50% 50% no-repeat;
+    opacity: 0.80;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 80);
+    filter: alpha(opacity = 80)
+}
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;
+}
+
+    /* Anytime the body has the loading class, our
+   modal element will be visible */
+    body.loading .loading-modal {
+        display:block;
+    }
+#pre-load-page {
+    width: 100%;
+    position: fixed;
+    z-index: 100000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgb(255, 255, 255) url(../img/loading.gif) 50% 50% no-repeat;
+}

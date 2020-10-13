@@ -1,0 +1,700 @@
+﻿
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<div class="card shadow mb-4">
+    <h4 class="card-header py-3 font-weight-bold text-primary">
+        -- Contacts --
+        <small class="float-sm-right p-1">
+            <button class="btn btn-primary float-right" data-toggle="modal" data-target="#createContactModal">Add</button>
+        </small>
+        <small class="float-sm-right p-1">
+            <button class="btn btn-primary float-right" onclick="callFunc();">Call</button>
+        </small>
+    </h4>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Phone Number</th>
+                        <th>Address</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Contact Info Modal-->
+<div class="modal fade" id="infoContactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Contact Info</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="user" id="info-contact-form" method="post">
+                    <div class="form-group row">
+                        <label for="firstname" class="col-sm-2 col-form-label">Firstname</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="firstname" class="form-control form-control-user" id="firstname" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="lastname" class="col-sm-2 col-form-label">Lastname</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="lastname" class="form-control form-control-user" id="lastname" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="phone" class="col-sm-2 col-form-label">Phone Number</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="phone" class="form-control form-control-user" id="phone" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="email" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" name="email" class="form-control form-control-user" id="email" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="address" class="col-sm-2 col-form-label">Address</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="address" class="form-control form-control-user" id="address" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <input type="hidden" name="contactId" id="contactId" />
+                        <button class="btn btn-primary btn-user btn-block" id="info-contact-button" type="submit">
+                            <i class="fas fa-edit"></i>Update Information
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Contact New Modal-->
+<div class="modal fade" id="createContactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New Contact</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="user" id="add-contact-form" method="post">
+                    <div class="form-group row">
+                        <label for="newfirstname" class="col-sm-2 col-form-label">Firstname</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="newfirstname" class="form-control form-control-user" id="newfirstname" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="newlastname" class="col-sm-2 col-form-label">Lastname</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="newlastname" class="form-control form-control-user" id="newlastname" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="newphone" class="col-sm-2 col-form-label">Phone Number</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="newphone" class="form-control form-control-user" id="newphone" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="newemail" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" name="newemail" class="form-control form-control-user" id="newemail" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="newaddress" class="col-sm-2 col-form-label">Address</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="newaddress" class="form-control form-control-user" id="newaddress" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <button class="btn btn-primary btn-user btn-block" id="add-contact-button" type="submit">
+                            <i class="fas fa-edit"></i>Add New
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call Modal-->
+<div class="modal fade" id="callModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Call Popup</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#call" aria-controls="call" role="tab" data-toggle="tab">Call</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#setting" aria-controls="setting" role="tab" data-toggle="tab">Setting</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="call">
+                        <audio id="ringToneAudio">
+                            <source src="~/vendor/mp3/ringtone.mp3" type="audio/mpeg" />
+                        </audio>
+                        <div class="col-md-12 p-4">
+                            <div class="form-group row">
+                                <label for="destination-input" class="col-sm-4 col-form-label">Phone Number: </label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="destination-input" class="form-control form-control-user font-weight-bolder" id="destination-input" required />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <audio id="remote-audio"></audio>
+                                <div class="col-lg-12">
+                                    <div id="volume-bar">
+                                        <input type="range" class="custom-range" id="volume-range" min="0" max="100" value="50" />
+                                        <button id="mute-button" class="btn btn-outline-success btn-user btn-block off">Mute off</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <button class="btn btn-info btn-user btn-block" id="invite-button" type="button">
+                                    Invite Session
+                                </button>
+                                <button class="btn btn-warning btn-user btn-block" id="terminate-button" type="button">
+                                    Terminate
+                                </button>
+                                <button class="btn btn-success btn-user btn-block" id="accept-button" type="button" disabled>
+                                    Accept Session
+                                </button>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-4 p-1">
+                                    <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(1);">1</button>
+                                </div>
+                                <div class="col-4 p-1">
+                                    <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(2);">2</button>
+                                </div>
+                                <div class="col-4 p-1">
+                                    <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(3);">3</button>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-4 p-1">
+                                    <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(4);">4</button>
+                                </div>
+                                <div class="col-4 p-1">
+                                    <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(5);">5</button>
+                                </div>
+                                <div class="col-4 p-1">
+                                    <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(6);">6</button>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-4 p-1">
+                                    <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(7);">7</button>
+                                </div>
+                                <div class="col-4 p-1">
+                                    <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(8);">8</button>
+                                </div>
+                                <div class="col-4 p-1">
+                                    <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(9);">9</button>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-4 p-1">
+                                    <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber('del');">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </button>
+                                </div>
+                                <div class="col-4 p-1">
+                                    <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber(0);">0</button>
+                                </div>
+                                <div class="col-4 p-1">
+                                    <button class="btn btn-secondary btn-user btn-block" type="button" onclick="phoneNumber('#')">#</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="setting">
+                        <form class="user p-4" id="sip-connect-form" method="post">
+                            <div class="form-group row">
+                                <label for="server" class="col-sm-3 col-form-label">Server</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="server" class="form-control form-control-user" id="server" required />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="username" class="col-sm-3 col-form-label">Username</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="username" class="form-control form-control-user" id="username" required />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="password" class="col-sm-3 col-form-label">Password</label>
+                                <div class="col-sm-9">
+                                    <input type="password" name="password" class="form-control form-control-user" id="password" required />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <button class="btn btn-primary btn-user btn-block" id="login-button" type="submit">
+                                    <i class="fas fa-edit"></i>Connect
+                                </button>
+                            </div>
+                            <div class="form-group row">
+                                <button class="btn btn-danger btn-user btn-block" id="logout-button" type="button" disabled>
+                                    <i class="fas fa-edit"></i>Exit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/js/jssip-3.3.11.min.js"></script>
+    <script type="text/javascript">
+        function CreateDataTable() {
+            $('#dataTable').DataTable().destroy();
+            $('#dataTable').DataTable({
+                info: false,
+                paging: true,
+                ordering: true,
+                lengthChange: false,
+                data: $.ajax({
+                    "url": `/api/contact?cardId=${localStorage.getItem("CARDID")}`,
+                    "method": "GET",
+                    "datatype": 'application/json',
+                    "async": false,
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                    }
+                }).responseJSON.data,
+                columns: [
+                    {
+                        data: 'firstname'
+                    },
+                    {
+                        data: 'lastname'
+                    },
+                    {
+                        data: 'phonenumber',
+                        render: function (data) {
+                            return '<a href="#" onclick="callFunc(\'' + data + '\')">' + data + '</a>';
+                        }
+                    },
+                    {
+                        data: 'address'
+                    },
+                    {
+                        data: 'id',
+                        render: function (data, type, full) {
+                            return '<button class="btn btn-success btn-circle btn-sm" onclick="infoBtnFunc(' + data + ');"><i class="fas fa-info"></i></button>'
+                                //+ '<button class="btn btn-warning btn-circle btn-sm" onclick="updateBtnFunc(' + data + ');"><i class="fas fa-edit"></i></button>'
+                                + '<button class="btn btn-danger btn-circle btn-sm" onclick="deleteBtnFunc(' + data + ');"><i class="fas fa-trash"></i></button>';
+                        }
+                    }
+                ]
+            });
+        }
+        $(document).ready(function (e) {
+            CreateDataTable();
+        });
+        function infoBtnFunc(id) {
+            var contactAPI = $.ajax({
+                url: `/api/contact/${id}`,
+                method: "GET",
+                datatype: 'application/json',
+                async: false,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                }
+            }).responseJSON.data;
+            var contact = contactAPI;
+            $('#firstname').val(contact.firstname);
+            $('#lastname').val(contact.lastname);
+            $('#phone').val(contact.phonenumber);
+            $('#email').val(contact.email);
+            $('#address').val(contact.address);
+            $('#contactId').val(id);
+            $("#infoContactModal").modal("show");
+        };
+        function deleteBtnFunc(id) {
+            swal({
+                title: "Do you want to delete this contact?",
+                text: "This contact will not be able to show again!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+            }).then(function (isConfirm) {
+                if (isConfirm.value == true) {
+                    $.ajax({
+                        url: `/api/contact/${id}`,
+                        method: "Delete",
+                        async: true,
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                        }, success: function (result) {
+                            swal("Successful!", "Delete Contact Successful", "success");
+                            CreateDataTable();
+                        }, error: function (ex) {
+                            console.log(ex.responseJSON);
+                            swal("Error!", ex.responseJSON.message, "error");
+                        }
+                    })
+                };
+            });
+        };
+        function callFunc(phoneNumber) {
+            $("#callModal").modal("show");
+            $("#destination-input").val(phoneNumber);
+
+        };
+        $(function () {
+            $('#info-contact-form').on("submit", function (e) {
+                e.preventDefault();
+
+                swal({
+                    title: "Do you want to update this contact?",
+                    text: "New information will be update!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                }).then(function (isConfirm) {
+                    if (isConfirm.value == true) {
+                        let contactModel = {
+                            firstname: $('#firstname').val(),
+                            lastname: $('#lastname').val(),
+                            phoneNumber: $('#phone').val(),
+                            email: $('#email').val(),
+                            address: $('#address').val()
+                        }
+                        console.log(contactModel);
+                        $.ajax({
+                            url: `/api/contact/${$('#contactId').val()}`,
+                            type: 'PUT',
+                            data: JSON.stringify(contactModel),
+                            contentType: 'application/json',
+                            timeout: 800000,
+                            async: false,
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                            }, success: function (result) {
+                                $('#infoContactModal').modal('hide');
+                                swal("Successful!", "Update Contact Successful", "success");
+                                CreateDataTable();
+                            }, error: function (ex) {
+                                console.log(ex.responseJSON);
+                                swal("Error!", ex.responseJSON.message, "error");
+                            }
+                        });
+                    };
+                });
+            });
+            $('#add-contact-form').on("submit", function (e) {
+                e.preventDefault();
+                swal({
+                    title: "Do you want to add this contact?",
+                    text: "New information will be update!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                }).then(function (isConfirm) {
+                    if (isConfirm.value == true) {
+                        let contactModel = {
+                            firstname: $('#newfirstname').val(),
+                            lastname: $('#newlastname').val(),
+                            phoneNumber: $('#newphone').val(),
+                            email: $('#newemail').val(),
+                            address: $('#newaddress').val(),
+                            cardId: parseInt(localStorage.getItem("CARDID"))
+                        }
+                        console.log(contactModel);
+                        $.ajax({
+                            url: `/api/contact`,
+                            type: 'POST',
+                            data: JSON.stringify(contactModel),
+                            contentType: 'application/json',
+                            timeout: 800000,
+                            async: false,
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": 'Bearer ' + localStorage.getItem("nesops_access_token")
+                            }, success: function (result) {
+                                $('#createContactModal').modal('hide');
+                                swal("Successful!", "Create Contact Successful", "success");
+                                CreateDataTable();
+                            }, error: function (ex) {
+                                console.log(ex.responseJSON);
+                                swal("Error!", ex.responseJSON.message, "error");
+                            }
+                        });
+                    };
+                });
+            })
+        });
+        function MyApp() {
+            /* Form Login */
+            this.identityForm = document.getElementById('sip-connect-form');
+            this.username = document.getElementById("username");
+            this.password = document.getElementById("password");
+            this.server = document.getElementById("server");
+            this.loginButton = document.getElementById("login-button");
+
+            /*Logout Button*/
+            this.logoutButton = document.getElementById("logout-button");
+            this.logoutButton.addEventListener('click', this.logoutUA.bind(this), false);
+
+            /*Destination Input (Extension)*/
+            this.destinationInput = document.getElementById('destination-input');
+
+            /*Invite Call Button*/
+            this.inviteButton = document.getElementById('invite-button');
+            this.inviteButton.addEventListener('click', this.sendInvite.bind(this), false);
+
+            /*Terminate Call Button*/
+            this.terminateButton = document.getElementById('terminate-button');
+            this.terminateButton.addEventListener('click', this.terminateSession.bind(this), false);
+
+            /*Accept Call Button*/
+            this.acceptButton = document.getElementById('accept-button');
+            this.acceptButton.addEventListener('click', this.acceptSession.bind(this), false);
+
+            /*Remote Media (Audio)*/
+            this.remoteAudio = document.getElementById('remote-audio');
+            this.remoteAudio.volume = 0.5;
+
+            this.volumeRange = document.getElementById('volume-range');
+            this.volumeRange.addEventListener('change', this.setVolume.bind(this), false);
+
+            this.muteButton = document.getElementById('mute-button');
+            this.muteButton.addEventListener('click', this.toggleMute.bind(this), false);
+
+            /*DTMF*/
+            document.addEventListener('keydown', function (e) {
+                this.sendDTMF(String.fromCharCode(e.keyCode));
+            }.bind(this), false);
+        }
+        MyApp.prototype = {
+            createUA: function () {
+                let loginButton = this.loginButton;
+                let logoutButton = this.logoutButton;
+                var username = this.username.value;
+                var password = this.password.value;
+                var server = this.server.value;
+                const socket = new JsSIP.WebSocketInterface('ws://' + server + ':8088/ws');
+                const configuration = {
+                    sockets: [socket],
+                    uri: 'sip:' + username + "@@" + server,
+                    authorization_user: username,
+                    password: password,
+                    display_name: username,
+                };
+                this.ua = new JsSIP.UA(configuration);
+                this.ua.start();
+                this.ua.on('connected', function (e) {
+                    console.log("UA connected!");
+                });
+                this.ua.on('disconnected', function (e) {
+                    console.log("UA disconnected!");
+                    loginButton.innerHTML = "Disconnected!";
+                    loginButton.disabled = false;
+                    logoutButton.disabled = true;
+                });
+                this.ua.on('registered', function (e) {
+                    loginButton.innerHTML = "Successful!";
+                    loginButton.disabled = true;
+                    logoutButton.disabled = false;
+                });
+                this.ua.on('unregistered', function (e) {
+                    console.log('unregistered', e);
+                    loginButton.innerHTML = "UnRegistered! Logout and Login Again!";
+                    logoutButton.disabled = false;
+                });
+                this.ua.on('registrationFailed', function (e) {
+                    console.log('registrationFailed', e);
+                    loginButton.innerHTML = "Registration Failed! Login Again!";
+                    logoutButton.disabled = true;
+                });
+                this.ua.on('newRTCSession', this.handleInvite.bind(this));
+            },
+            logoutUA: function () {
+                if (!this.ua) { return; }
+                this.ua.stop();
+                this.loginButton.innerHTML = "Login";
+                this.loginButton.disabled = false;
+            },
+            sendInvite: function () {
+                const destination = this.destinationInput.value;
+                if (!destination) { return; }
+                var options = {
+                    'mediaConstraints': {
+                        'audio': true,
+                        'video': false
+                    }
+                };
+                var session = this.ua.call(destination, options);
+                this.setSession(session);
+                this.inviteButton.disabled = true;
+            },
+            handleInvite: function (e) {
+                var _self = this;
+                if (e.originator === 'remote') {
+                    const session = e.session;
+                    this.setSession(session);
+                    this.setStatus('Ring ring! ' + session.remote_identity.uri.toString() + ' is calling!', true);
+                    this.acceptButton.disabled = false;
+                    playRingTone();
+                    swal("New Call", 'Ring ring! ' + session.remote_identity.uri.toString() + ' is calling!', "warning");
+                }
+            },
+            acceptSession: function () {
+                if (!this.session) { return; }
+                var options = {
+                    'mediaConstraints': {
+                        'audio': true,
+                        'video': false
+                    }
+                };
+                this.acceptButton.disabled = true;
+                this.session.answer(options);
+                stopRingTone();
+            },
+            setSession: function (session) {
+                session.on('progress', function () {
+                    this.setStatus('Ringing...', true);
+                }.bind(this));
+                session.on('failed', function () {
+                    this.setStatus('Call failed. Try again?', false);
+                    if (session === this.session) {
+                        delete this.session;
+                    }
+                    stopRingTone();
+                }.bind(this));
+                session.on('ended', function () {
+                    this.setStatus('Bye! Invite Another?', false);
+                    if (session === this.session) {
+                        delete this.session;
+                    }
+                }.bind(this));
+                session.on('accepted', function (e) {
+                    this.setStatus('Connected!', true);
+                    const remoteStream = session.connection.getRemoteStreams()[0];
+                    this.remoteAudio.srcObject = remoteStream;
+                    this.remoteAudio.play();
+                    stopRingTone();
+                }.bind(this));
+                this.session = session;
+            },
+            /* Update the UI, enabling or disabling new Invites as necessary. */
+            setStatus: function (status, disable) {
+                this.inviteButton.innerHTML = status;
+                this.inviteButton.disabled = disable;
+            },
+            terminateSession: function () {
+                if (!this.session) { return; }
+                this.session.terminate();
+                stopRingTone();
+            },
+            /* Set volume call */
+            setVolume: function () {
+                this.remoteAudio.volume = (parseInt(this.volumeRange.value, 10) || 0) / 100;
+            },
+            toggleMute: function () {
+                if (!this.session) { return; }
+                var mute = "Mute off";
+                // Mute and unmute are toggled based on the button's CSS class.
+                if (this.muteButton.classList.contains('on')) {
+                    this.session.unmute();
+                    this.muteButton.classList.remove('on');
+                    mute = "Mute off";
+                } else {
+                    this.session.mute();
+                    this.muteButton.classList.add('on');
+                    mute = "Mute on";
+                }
+                this.muteButton.innerHTML = mute;
+            },
+            /*Send DTMF*/
+            sendDTMF: function (tone) {
+                if (this.session) {
+                    this.session.sendDTMF(tone);
+                }
+            }
+        };
+
+        function phoneNumber(character) {
+            var destination = document.getElementById('destination-input');
+            var destinationString = destination.value.toString();
+            if (character == "del") {
+                if (!destinationString) { return; }
+                else {
+                    destinationString = destinationString.substring(0, destinationString.length - 1);
+                }
+            } else {
+                destinationString = destinationString + character;
+            }
+            destination.value = destinationString;
+        }
+        function playRingTone() {
+            document.getElementById('ringToneAudio').play();
+        }
+        function stopRingTone() {
+            document.getElementById('ringToneAudio').pause();
+            document.getElementById('ringToneAudio').currentTime = 0;
+        }
+        var myApp;
+        $("#sip-connect-form").on("submit", function (e) {
+            e.preventDefault();
+            myApp = null;
+            myApp = new MyApp();
+            myApp.createUA();
+        });
+    </script>
+}
+
